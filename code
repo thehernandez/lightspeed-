@@ -1,0 +1,73 @@
+import pygame
+import random
+import math
+
+#boilerplate code 
+pygame.init()
+gamescreen=pygame.display.set_mode((900, 900))
+pygame.display.set_caption("single partical movement")
+clock = pygame.time.Clock()
+
+#Partical setup
+
+xpos = [] #x pos of particals
+ypos = [] #y pos of particals
+xVel = [] #x vel of particals
+yVel = [] #y vel of particals 
+speed = 2 
+
+# Create particals
+for i in range(100):
+    xpos.append(450)# x center 
+    ypos.append(450)#y center
+    
+    # generate rand vel
+    velX = random.uniform(-1, 1)
+    velY = random.uniform(-1, 1)
+    
+    #calculate magnitude of vel vecter
+    magnitude = math.sqrt(velX**2 + velY**2) 
+    
+    #normalize the vel vector for speed
+    if magnitude != 0:
+        normalizedVelX = speed * velX / magnitude
+        normalizedVelY = speed * velY / magnitude
+    else:
+        normalizedVelX = 0
+        normalizedVelY = 0
+        
+    xVel.append(normalizedVelX)
+    yVel.append(normalizedVelY)
+
+
+
+#==========================================================================
+while True:
+    clock.tick(60)
+     
+    for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+          break
+            
+    #physics
+    for i in range(100): 
+      #update position
+      xpos[i] += xVel[i]
+      ypos[i] += yVel[i]
+
+        #boundary checking
+      if xpos[i] < 0 or xpos[i] > 900:
+        xVel[i] =random.randint(-2, 2)
+        xpos[i]=450
+      if ypos[i] < 0 or ypos[i] > 900:
+        yVel[i] =random.randint(-2, 2)
+        ypos[i] =450
+        
+    #render section===========================
+    gamescreen.fill((0, 0, 0))
+    for i in range(100):
+        pygame.draw.circle(gamescreen, (255, 255, 255), (xpos[i], ypos[i]), 5)
+    pygame.display.flip()
+    
+#ends pygame loop
+pygame.quit()
